@@ -7,21 +7,23 @@ def palindrome1(s):
     for char in s:
         if char.isalnum():
             strs.append(char.lower())
-    
+
+
     while len(strs)>1:
         if strs.pop(0)!=strs.pop():
             return False
 
     return True
-    
-def palindrome2(s):
-    strs: Deque= collections.deque()
+    s
+def palindrome2(s: str) -> bool:
+    strs=collections.deque()
     for char in s:
         if char.isalnum():
             strs.append(char.lower())
-    
+
+
     while len(strs)>1:
-        if strs.popleft()!=strs.pop(): #popleft->O(1), pop(0)->O(n) 
+        if strs.popleft()!=strs.pop():
             return False
 
     return True
@@ -33,6 +35,6 @@ def palindrome3(s):
     return s==s[::-1]
 
 start = time.time()
-a=palindrome1('A man, a plan, a canal: panama')
+a=palindrome2('A man, a plan, a canal: panama')
 print(a)
 print("time :", time.time() - start)
