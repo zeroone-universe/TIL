@@ -9,7 +9,7 @@ def reorder_logfile(l:list):
     letters.sort(key=lambda x:(x.split()[1:], x.split()[0]))
     return letters + digits
 
-    pass
+
 
 
 

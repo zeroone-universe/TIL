@@ -12,7 +12,7 @@ def swap1(l: list):
 def swap2(l: list):
     l.reverse()
 
-a=['H','a','n','n','a','h']
+a=['H','a','n','n','ㅐ','h']
 start = time.time()
 swap2(a)
 print("time :", time.time() - start)
