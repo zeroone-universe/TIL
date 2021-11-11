@@ -12,8 +12,8 @@ def reorder_log(logs:list):
 
 
 
-
-logs=['dig1 8 1 5 1 ','let1 art can', 'dig2 3 6', 'let own kilt dig', 'let3 art zero']
-result=reorder_log(logs)
-print(result)
+if __name__=='__main__':
+    logs=['dig1 8 1 5 1 ','let1 art can', 'dig2 3 6', 'let own kilt dig', 'let3 art zero']
+    result=reorder_log(logs)
+    print(result)
 

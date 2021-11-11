@@ -33,8 +33,8 @@ def palindrome3(s):
     s=re.sub('[^a-z0-9]','',s)
 
     return s==s[::-1]
-
-start = time.time()
-a=palindrome2('A man, a plan, a canal: panama')
-print(a)
-print("time :", time.time() - start)
+if __name__=='__main__':
+    start = time.time()
+    a=palindrome2('A man, a plan, a canal: panama')
+    print(a)
+    print("time :", time.time() - start)

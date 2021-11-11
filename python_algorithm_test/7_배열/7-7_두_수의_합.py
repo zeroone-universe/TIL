@@ -20,6 +20,7 @@ def two_sum_dic(nums:list, target:int)->list:
     for i, num in enumerate(nums):
         if target-num in nums_dic and i!=nums_dic[target-num]:
             return(i, nums_dic[target-num])
+#리스트의 index를 value로, 리스트의 값을 key로 갖는 딕셔너리 만들기
 
 def two_sum_dic2(nums:list, target:int)->list:
     nums_dic={}
@@ -28,6 +29,7 @@ def two_sum_dic2(nums:list, target:int)->list:
             return(i, nums_dic[target-num])
         nums_dic[num]=i   
 
-nums=[2,2,7,15]
-target=9
-print(two_sum_dic2(nums,target))
+if __name__=='__main__':
+    nums=[2,2,7,15]
+    target=9
+    print(two_sum_dic2(nums,target))

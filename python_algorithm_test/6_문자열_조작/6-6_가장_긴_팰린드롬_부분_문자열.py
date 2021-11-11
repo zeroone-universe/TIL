@@ -20,13 +20,10 @@ def longest_palandrome(s:str):
     
 
     return result
-if __name__ == '__main__':
-    print("이거 없애라")
-print('이거없애라')
-'''
-input1='babadejfjefjfedksl'
-print("output1 : {}".format(longest_palandrome(input1)))
-input2='12345432'
-print("output2 : {}".format(longest_palandrome(input2)))
 
-'''
+if __name__ == '__main__':
+
+    input1='babadejfjefjfedksl'
+    print("output1 : {}".format(longest_palandrome(input1)))
+    input2='12345432'
+    print("output2 : {}".format(longest_palandrome(input2)))

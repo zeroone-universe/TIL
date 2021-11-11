@@ -11,6 +11,7 @@ def mostcommon(paragraph, banned):
     b=collections.Counter(a)
     return b.most_common(1)[0][0]
 
-paragraph='Bob hit a ball, the hit BALL flew far after it was hit'
-banned= ['hit']
-print(mostcommon(paragraph, banned))
+if __name__=='__main__':
+    paragraph='Bob hit a ball, the hit BALL flew far after it was hit'
+    banned= ['hit']
+    print(mostcommon(paragraph, banned))

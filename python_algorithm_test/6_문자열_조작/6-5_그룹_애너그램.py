@@ -8,6 +8,7 @@ def group_anagrams(words: list):
 
     return anagrams.values()
 
-inp=['eat','tea','tan','ate','nat','bat']
+if __name__=='__main__':
+    inp=['eat','tea','tan','ate','nat','bat']
 
-print(group_anagrams(inp))
+    print(group_anagrams(inp))
