@@ -14,7 +14,7 @@ def palindrome1(s):
             return False
 
     return True
-    s
+    
 def palindrome2(s: str) -> bool:
     strs=collections.deque()
     for char in s:
