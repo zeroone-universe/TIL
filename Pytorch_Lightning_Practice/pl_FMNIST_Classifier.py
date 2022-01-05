@@ -63,7 +63,7 @@ class FMNIST_classifier(pl.LightningModule):
         batch_size, channels, width, height = x.size()
         x=x.view(batch_size,-1)
         x=self.net(x)
-        return torch.log_softmax(x, dim=1)
+        return F.log_softmax(x, dim=1)
 
     
     def loss_fn(self, logits, labels):
@@ -90,9 +90,8 @@ class FMNIST_classifier(pl.LightningModule):
         
     
     def test_step(self,batch,batch_dix):
-        pass
-        #will not be used until I call trainer.test()    
-        #return test_loss
+        x,y=batch
+        y_hat=
     
 if __name__=='__main__':
     data_module=FMNIST_load()

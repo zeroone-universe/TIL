@@ -5,11 +5,11 @@ import pytorch_lightning as pl
 class DATASETNAME(pl.LightningDataModule):
     def prepare_Data(self):
         
-    '''
+    
     def setup(self,stage):
-      
-    optional  
-    '''
+        pass
+  
+    
     
     def train_dataloader(self):
         return 
