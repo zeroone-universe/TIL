@@ -1,47 +1,87 @@
+import torch
+from torch import nn
+import pytorch_lightning as pl
+from torch.utils.data import DataLoader, random_split
+from torch.nn import functional as F
+from torchvision.datasets import MNIST
+from torchvision import datasets, transforms
 import os
 
-import torch
-from pytorch_lightning import LightningModule, Trainer
-from torch import nn
-from torch.nn import functional as F
-from torch.utils.data import DataLoader, random_split
-from torchmetrics import Accuracy
-from torchvision import transforms
-from torchvision.datasets import MNIST
+class LightningMNISTClassifier(pl.LightningModule):
 
-PATH_DATASETS = os.environ.get("PATH_DATASETS", ".")
-AVAIL_GPUS = min(1, torch.cuda.device_count())
-BATCH_SIZE = 256 if AVAIL_GPUS else 64
+  def __init__(self):
+    super().__init__()
 
-class MNISTModel(LightningModule):
-    def __init__(self):
-        super().__init__()
-        self.l1 = torch.nn.Linear(28 * 28, 10)
+    # mnist images are (1, 28, 28) (channels, width, height) 
+    self.layer_1 = torch.nn.Linear(28 * 28, 128)
+    self.layer_2 = torch.nn.Linear(128, 256)
+    self.layer_3 = torch.nn.Linear(256, 10)
 
-    def forward(self, x):
-        return torch.relu(self.l1(x.view(x.size(0), -1)))
+  def forward(self, x):
+      batch_size, channels, width, height = x.size()
 
-    def training_step(self, batch, batch_nb):
-        x, y = batch
-        loss = F.cross_entropy(self(x), y)
-        return loss
+      # (b, 1, 28, 28) -> (b, 1*28*28)
+      x = x.view(batch_size, -1)
 
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=0.02)
+      # layer 1 (b, 1*28*28) -> (b, 128)
+      x = self.layer_1(x)
+      x = torch.relu(x)
 
-        # Init our model
-mnist_model = MNISTModel()
+      # layer 2 (b, 128) -> (b, 256)
+      x = self.layer_2(x)
+      x = torch.relu(x)
 
-# Init DataLoader from MNIST Dataset
-train_ds = MNIST(PATH_DATASETS, train=True, download=True, transform=transforms.ToTensor())
-train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE)
+      # layer 3 (b, 256) -> (b, 10)
+      x = self.layer_3(x)
 
-# Initialize a trainer
-trainer = Trainer(
-    gpus=AVAIL_GPUS,
-    max_epochs=3,
-    progress_bar_refresh_rate=20,
-)
+      # probability distribution over labels
+      x = torch.log_softmax(x, dim=1)
 
-# Train the model ⚡
-trainer.fit(mnist_model, train_loader)
+      return x
+
+  def cross_entropy_loss(self, logits, labels):
+    return F.nll_loss(logits, labels)
+
+  def training_step(self, train_batch, batch_idx):
+      x, y = train_batch
+      logits = self.forward(x)
+      loss = self.cross_entropy_loss(logits, y)
+      self.log('train_loss', loss)
+      return loss
+
+
+  def validation_step(self, val_batch, batch_idx):
+      x, y = val_batch
+      logits = self.forward(x)
+      loss = self.cross_entropy_loss(logits, y)
+      self.log('val_loss', loss)
+
+  def configure_optimizers(self):
+    optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+    return optimizer
+
+
+class MNISTDataModule(pl.LightningDataModule):
+
+  def setup(self, stage):
+    # transforms for images
+    transform=transforms.Compose([transforms.ToTensor(), 
+                                  transforms.Normalize((0.1307,), (0.3081,))])
+      
+    # prepare transforms standard to MNIST
+    self.mnist_train = MNIST("F:\Python_Codes\Data_for_Practice", train=True, download=True, transform=transform)
+    self.mnist_test = MNIST("F:\Python_Codes\Data_for_Practice", train=False, download=True, transform=transform)
+
+  def train_dataloader(self):
+    return DataLoader(self.mnist_train, batch_size=64)
+
+  def val_dataloader(self):
+    return DataLoader(self.mnist_test, batch_size=64)
+
+data_module = MNISTDataModule()
+
+# train
+model = LightningMNISTClassifier()
+trainer = pl.Trainer()
+
+trainer.fit(model, data_module)

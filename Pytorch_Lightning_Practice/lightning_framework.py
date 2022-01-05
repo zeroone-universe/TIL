@@ -30,7 +30,7 @@ class MODELNAME(pl.LightningModule):
     def cal_loss(self, a,b):
         return loss
     
-    def configure_optimizers:
+    def configure_optimizers():
         
         return optimizers
     
@@ -48,7 +48,10 @@ class MODELNAME(pl.LightningModule):
     
 if __name__=='__main__':
     data_module=DATASETNAME()
-    trainer=pl.Trainer()
+    trainer=pl.Trainer(gpus=,
+    max_epochs=,
+    progress_bar_refresh_rate=,
+    )
     trainer.fit(MODELNAME, data_module)
     
     
