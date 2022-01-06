@@ -1,11 +1,14 @@
 import torch
+import torch.
 from torch import nn
+
 import pytorch_lightning as pl
 
 class DATASETNAME(pl.LightningDataModule):
+    '''
     def prepare_Data(self):
-        
-    
+        optional 
+    '''
     def setup(self,stage):
         pass
   
