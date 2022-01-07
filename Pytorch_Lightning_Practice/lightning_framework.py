@@ -1,6 +1,8 @@
 import torch
-import torch.
 from torch import nn
+
+import torchmetrics
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 import pytorch_lightning as pl
 
