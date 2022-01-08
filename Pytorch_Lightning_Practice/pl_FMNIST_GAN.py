@@ -15,7 +15,7 @@ class FMNIST_load(pl.LightningDataModule):
     '''
     
     def setup(self, stage):
-        full_data = datasets.FashionMNIST(
+        self.train_data = datasets.FashionMNIST(
         root="F:\Python_Codes\Data_for_Practice", 
         train=True, 
         download=True, 
@@ -29,32 +29,76 @@ class FMNIST_load(pl.LightningDataModule):
         transform=ToTensor()
         )
 
-        self.train_data, self.val_data=torch.utils.data.random_split(full_data, [50000,10000])
     
     def train_dataloader(self):
         return DataLoader(self.train_data, batch_size=128, shuffle=True)
     
     def val_dataloader(self):
-        return DataLoader(self.val_data, batch_size=128)
+        pass
     
     def test_dataloader(self):
         return DataLoader(self.test_data, batch_size=128)
 
+class Generator(nn.module):
+    def __init__(self, input_dim=100, img_shape=(28,28)):
+        super(generator,self).__init__()
+        self.input_dim=input_dim
+        self.img_shape=img_shape
+        
+        def block(in_feat, out_feat):
+            layers=[nn.Linear(in_feat, out_feat),
+            nn.BatchNorm1d(out_feat),
+            nn.ReLU()]
+            return layers
 
+        self.model=nn.Sequential(
+            *block(self.input_dim,128),
+            *block(128,256),
+            *block(256,512),
+            *block(512,1024),
+            nn.Linear(1024, int(np.prod(self.img_shape))),
+            nn.Tanh()
+        )
+
+    def forward(self,z):
+        img=self.model(z)
+        img=img.view(img.size(0),*self.img_shape)
+        return img
+
+class Discriminator(nn.Module):
+    def __init__(self, img_shape=(28,28)):
+        super(Discriminator,self).__init__()
+    
+        self.model=nn.Sequential(
+            nn.Linear(int(np.prod(img_shape)),512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256,1),
+            nn.Sigmoid()
+        )
+
+    def forward(self,img):
+        img=img.view(img.size(0),-1)
+        out=self.model(img)
+        return out
 
 class GAN(pl.LightningModule):
     def __init__(self):
-        super(MODELNAME,self).__init__()
-        
+        super(GAN,self).__init__()
+        self.Generator=Generator()
+        self.Discriminator=Discriminator()
+
     def forward(self,x):
-        return output
+        return self.Generator(z)
     
     def cal_loss(self, a,b):
-        return loss
+        return F.binary_cross_entropy(y_hat, y)
     
     def configure_optimizers(self):
-        
-        return optimizers
+        opt_g= torch.optim.Adam(self.Generator.parameters()lr=1e-3)
+        opt_d=torch.optim.Adam(self.Discriminator.parameters(),lr=1e-3)
+        return [opt_g, opt_d]
     
     def training_step(self,batch,batch_idx):
         
@@ -74,7 +118,7 @@ class GAN(pl.LightningModule):
     
 
     def validation_step(self,batch,batch_idx):
-        return val_loss
+        pass
 
     '''
     def validation_step_end(self, batch_parts):
