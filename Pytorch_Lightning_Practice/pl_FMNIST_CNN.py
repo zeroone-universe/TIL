@@ -3,6 +3,7 @@ from torch import nn
 
 import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning import loggers as pl_loggers
 
 from torch.utils.data import Dataset, DataLoader
 
@@ -36,13 +37,13 @@ class FMNIST_load(pl.LightningDataModule):
         self.train_data, self.val_data=torch.utils.data.random_split(full_data, [50000,10000])
     
     def train_dataloader(self):
-        return DataLoader(self.train_data, batch_size=64, shuffle=True)
+        return DataLoader(self.train_data, batch_size=128, shuffle=True)
     
     def val_dataloader(self):
-        return DataLoader(self.val_data, batch_size=64)
+        return DataLoader(self.val_data, batch_size=128)
     
     def test_dataloader(self):
-        return DataLoader(self.test_data, batch_size=64)
+        return DataLoader(self.test_data, batch_size=128)
     
 
 class CNN(pl.LightningModule):
@@ -108,11 +109,12 @@ class CNN(pl.LightningModule):
         metrics={'val_acc':acc, 'val_loss':loss}
         
         self.log_dict(metrics)
-
+        return loss
     
-        
+    def validation_epoch_end(self,outputs):
+        pass      
     
-    def test_step(self,batch,batch_dix):
+    def test_step(self,batch,batch_idx):
         x,y=batch
         y_hat=self.forward(x)
         loss=self.cal_loss(y_hat,y)
@@ -125,11 +127,12 @@ if __name__=='__main__':
     data_module=FMNIST_load()
     model=CNN()
     
-
+    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/")
     trainer=pl.Trainer(gpus=1,
     max_epochs=10,
-    progress_bar_refresh_rate=10,
-    callbacks=[EarlyStopping(monitor="val_loss", min_delta=0.00, patience=2, verbose=False, mode="min")]
+    progress_bar_refresh_rate=1,
+    callbacks=[EarlyStopping(monitor="val_acc", min_delta=0.00, patience=3, verbose=False, mode="max")],
+    logger=tb_logger
     )
     
     trainer.fit(model, data_module)

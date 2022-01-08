@@ -4,6 +4,7 @@ from torch import nn
 
 import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning import loggers as pl_loggers
 
 import pytorch_lightning as pl
 
@@ -63,10 +64,10 @@ class MODELNAME(pl.LightningModule):
         return something 
     '''
 
-    def validation_epoch_end(self,validation_step_outputs)
+    def validation_epoch_end(self,validation_step_outputs):
         return 
 
-    def test_step(self,batch,batch_dix):
+    def test_step(self,batch,batch_idx):
         #will not be used until I call trainer.test()    
         return test_loss
     
