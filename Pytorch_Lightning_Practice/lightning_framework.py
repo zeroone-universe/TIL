@@ -79,8 +79,9 @@ class MODELNAME(pl.LightningModule):
 if __name__=='__main__':
     data_module=DATASETNAME()
     
+    tb_logger = pl_loggers.TensorBoardLogger("어디어디logs/")
     trainer=pl.Trainer(
-        logger=,
+        logger=tb_logger,
         gpus=,
         max_epochs=,
         progress_bar_refresh_rate=,

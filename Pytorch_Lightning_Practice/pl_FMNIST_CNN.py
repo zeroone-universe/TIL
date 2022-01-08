@@ -124,6 +124,7 @@ class CNN(pl.LightningModule):
 if __name__=='__main__':
     data_module=FMNIST_load()
     model=CNN()
+    
 
     trainer=pl.Trainer(gpus=1,
     max_epochs=10,
