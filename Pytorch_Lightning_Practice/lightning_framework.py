@@ -73,13 +73,19 @@ class MODELNAME(pl.LightningModule):
     def test_epoch_end(self, test_step_outputs):
         return something
 
+    def predict_step(self, batch, batch_idx, dataloader_idx=0):
+        return a
+
 if __name__=='__main__':
     data_module=DATASETNAME()
-    trainer=pl.Trainer(gpus=,
-    max_epochs=,
-    progress_bar_refresh_rate=,
-    )
-    trainer.fit(MODELNAME, data_module)
     
+    trainer=pl.Trainer(
+        logger=,
+        gpus=,
+        max_epochs=,
+        progress_bar_refresh_rate=,
+        )
+    trainer.fit(MODELNAME, data_module)
+    trainer.test()
     
     
