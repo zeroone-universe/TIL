@@ -81,7 +81,7 @@ if __name__=='__main__':
     
     tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/")
     trainer=pl.Trainer(gpus=1,
-    max_epochs=10,
+    max_epochs=1,
     progress_bar_refresh_rate=1,
     callbacks=[EarlyStopping(monitor="val_acc", min_delta=0.00, patience=2, verbose=False, mode="max")],
     logger=tb_logger
@@ -90,4 +90,22 @@ if __name__=='__main__':
     trainer.fit(model, data_module)
     trainer.test(model, data_module)
     
+    fmnist_label={0:'Top', 1:'Trouser', 2:'Pullover', 3: 'Dress', 4: 'Coat', 5: 'Sandal', 6: 'Shirt', 7: 'Sneaker', 8: 'Bag', 9: 'Ankle boot'}
+
+    a=data_module.test_dataloader()
+
+    x, y=next(iter(a))
+
+    y_hat=model(x)
+    y_pred=torch.argmax(y_hat,dim=1)
+    print(y_pred.shape)
+
+    pltsize=1
+    plt.figure(figsize=(10*pltsize, pltsize))
+    for i in range(10):
+        plt.subplot(1,10,i+1)
+        plt.axis('off')
+        plt.imshow(x[i,:,:,:].numpy().reshape(28,28), cmap="gray_r")
+        plt.title(f"Pred:{fmnist_label[y_pred[i].item()]}\nLabel:{fmnist_label[y[i].item()]}", fontdict = {'fontsize' : 7})
+    plt.show()
     

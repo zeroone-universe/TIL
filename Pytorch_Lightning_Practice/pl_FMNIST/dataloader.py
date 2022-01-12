@@ -1,19 +1,14 @@
 import torch
-from torch import nn
+from torch.utils.data import Dataset, DataLoader
 
 import pytorch_lightning as pl
-import torchmetrics
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
-from torch.utils.data import Dataset, DataLoader
 
 from torchvision import datasets, transforms
 from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
-import random
-import numpy as np
 
 
 class FMNIST_load(pl.LightningDataModule):
@@ -53,22 +48,28 @@ class FMNIST_load(pl.LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.test_data, batch_size=self.batch_size)
 
+    def predict_dataloader(self):
+        return DataLoader(self.test_data, batch_size=self.batch_size)
+
+
 if __name__=='__main__':
     fmnist=FMNIST_load()
     fmnist.setup(stage=None)
     a=fmnist.train_dataloader()
-    #x,y=next(iter(train_dataloader))
+    example_data, example_target=next(iter(a))
 
-    for x,y in a:
-        
-        print("Shape of X: ", x.shape, type(x))
-        print("Shape of y: ", y.shape, y.dtype)
-        img=x[0].squeeze()
-        print(f"Shape of img: {x[0].shape} to {img.shape}")
-        label=y[0]
-        plt.imshow(img,cmap='gray')
-        plt.show()
-        print(f"Label: {label}")
-        break
+    print(f"Example_Data \nDim : {example_data.dim()}, Shape: {example_data.shape}, dtype: {example_data.dtype}, device: {example_data.device} ")
+    print(f"Example_target \nDim : {example_target.dim()}, Shape: {example_target.shape}, dtype: {example_target.dtype}, device: {example_target.device} ") 
+
+    fmnist_label={0:'Top', 1:'Trouser', 2:'Pullover', 3: 'Dress', 4: 'Coat', 5: 'Sandal', 6: 'Shirt', 7: 'Sneaker', 8: 'Bag', 9: 'Ankle boot'}
+
+    pltsize=1
+    plt.figure(figsize=(10*pltsize, pltsize))
+    for i in range(10):
+        plt.subplot(1,10,i+1)
+        plt.axis('off')
+        plt.imshow(example_data[i,:,:,:].numpy().reshape(28,28), cmap="gray_r")
+        plt.title(fmnist_label[example_target[i].item()])
+    plt.show()
         
         
