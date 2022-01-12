@@ -1,3 +1,4 @@
+from pytorch_lightning.utilities.types import EPOCH_OUTPUT
 import torch
 from torch import nn
 
@@ -61,7 +62,7 @@ class TrainClassifier(pl.LightningModule):
         return loss
     
     def validation_epoch_end(self,outputs):
-        pass      
+        pass
     
     def test_step(self,batch,batch_idx):
         
@@ -80,7 +81,7 @@ if __name__=='__main__':
     data_module=FMNIST_load()
     model=TrainClassifier()
     
-    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/",name='lightning_logs')
+    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/",name='CNN_logs')
     trainer=pl.Trainer(gpus=1,
     max_epochs=100,
     progress_bar_refresh_rate=1,
