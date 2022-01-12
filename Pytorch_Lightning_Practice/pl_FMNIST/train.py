@@ -16,9 +16,9 @@ from models.DNN import DNN
 
 from dataloader import FMNIST_load
 
-class Classifier(pl.LightningModule):
+class TrainClassifier(pl.LightningModule):
     def __init__(self, model_name='CNN'):
-        super(Classifier,self).__init__()
+        super(TrainClassifier,self).__init__()
         if model_name=='CNN':
             self.classifier=CNN()
         elif model_name=='DNN':
@@ -47,7 +47,7 @@ class Classifier(pl.LightningModule):
         y_hat=self.forward(x)
         loss=self.loss_fn(y_hat,y)
         acc=self.train_acc(y_hat,y)
-        metrics={'train_acc':acc, 'train_loss':loss}
+        self.log("Training_Performance", {'train_acc':acc, 'train_loss':loss})
         return loss
     
     def validation_step(self,batch,batch_idx):
@@ -64,6 +64,7 @@ class Classifier(pl.LightningModule):
         pass      
     
     def test_step(self,batch,batch_idx):
+        
         x,y=batch
         y_hat=self.forward(x)
         loss=self.loss_fn(y_hat,y)
@@ -77,14 +78,15 @@ class Classifier(pl.LightningModule):
     
 if __name__=='__main__':
     data_module=FMNIST_load()
-    model=Classifier()
+    model=TrainClassifier()
     
-    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/")
+    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/",name='lightning_logs')
     trainer=pl.Trainer(gpus=1,
-    max_epochs=1,
+    max_epochs=100,
     progress_bar_refresh_rate=1,
     callbacks=[EarlyStopping(monitor="val_acc", min_delta=0.00, patience=2, verbose=False, mode="max")],
-    logger=tb_logger
+    logger=tb_logger,
+    default_root_dir="./"
     )
     
     trainer.fit(model, data_module)
