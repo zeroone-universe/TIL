@@ -9,7 +9,7 @@ import pytorch_lightning as pl
 
 class DATASETNAME(pl.LightningDataModule):
     '''
-    def prepare_Data(self):
+    def prepare_data(self):
         optional 
     '''
     def setup(self,stage):
