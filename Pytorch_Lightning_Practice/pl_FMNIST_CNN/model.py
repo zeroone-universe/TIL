@@ -5,14 +5,12 @@ import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning import loggers as pl_loggers
 
-from torch.utils.data import Dataset, DataLoader
 
-from torchvision import datasets
-from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import pytorch_lightning as pl
-    
+
+from dataloader import FMNIST_load
 
 class CNN(pl.LightningModule):
     def __init__(self):

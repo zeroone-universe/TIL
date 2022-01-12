@@ -30,7 +30,7 @@ class MODELNAME(pl.LightningModule):
         
     def forward(self,x):
         return output
-    
+        #forward defines the prediciton/inference actions
     def cal_loss(self, a,b):
         return loss
     
