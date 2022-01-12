@@ -2,8 +2,10 @@ import torch
 from torch import nn
 
 class CNN(nn.Module):
-    def __init__(self):
+    def __init__(self,drop_prob=0.5):
         super(CNN,self).__init__()
+        self.drop_prob=drop_prob
+
         self.conv1=nn.Sequential(
             nn.Conv2d(1,32,kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -21,7 +23,8 @@ class CNN(nn.Module):
         )
         self.fc1=nn.Sequential(
             nn.Linear(128*4*4,4*128),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.Dropout(p=self.drop_prob),
         )
         self.fc2=nn.Sequential(
             nn.Linear(4*128,10)
@@ -36,4 +39,5 @@ class CNN(nn.Module):
         x=self.fc1(x)
         x=self.fc2(x)
         return x
+
 

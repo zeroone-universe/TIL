@@ -4,7 +4,7 @@ from torch import nn
 
 import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from pytorch_lightning import loggers as pl_loggers
+
 
 
 import matplotlib.pyplot as plt
@@ -18,12 +18,13 @@ from models.DNN import DNN
 from dataloader import FMNIST_load
 
 class TrainClassifier(pl.LightningModule):
-    def __init__(self, model_name='CNN'):
+    def __init__(self, model_name='CNN', drop_prob=0.5):
         super(TrainClassifier,self).__init__()
+        self.drop_prob=drop_prob
         if model_name=='CNN':
-            self.classifier=CNN()
+            self.classifier=CNN(drop_prob=self.drop_prob)
         elif model_name=='DNN':
-            self.classifier=DNN()
+            self.classifier=DNN(drop_prob=self.drop_prob)
         else:
             print("No classifier")
             
@@ -48,7 +49,8 @@ class TrainClassifier(pl.LightningModule):
         y_hat=self.forward(x)
         loss=self.loss_fn(y_hat,y)
         acc=self.train_acc(y_hat,y)
-        self.log("Training_Performance", {'train_acc':acc, 'train_loss':loss})
+        metrics= {'train_acc':acc, 'train_loss':loss}
+        self.log_dict(metrics)
         return loss
     
     def validation_step(self,batch,batch_idx):
