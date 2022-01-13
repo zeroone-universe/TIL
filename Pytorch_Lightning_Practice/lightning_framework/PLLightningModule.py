@@ -1,29 +1,3 @@
-import torch
-from torch import nn
-
-import torchmetrics
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from pytorch_lightning import loggers as pl_loggers
-
-import pytorch_lightning as pl
-
-class DATASETNAME(pl.LightningDataModule):
-    '''
-    def prepare_data(self):
-        optional 
-    '''
-    def setup(self,stage):
-        pass
-    
-    def train_dataloader(self):
-        return 
-        
-    def val_dataloader(self):
-        return 
-    
-    def test_dataloader(self):
-        return 
-    
 class MODELNAME(pl.LightningModule):
     def __init__(self):
         super(MODELNAME,self).__init__()
@@ -73,20 +47,7 @@ class MODELNAME(pl.LightningModule):
     def test_epoch_end(self, test_step_outputs):
         return something
 
+'''
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
-        return a
-
-if __name__=='__main__':
-    data_module=DATASETNAME()
-    
-    tb_logger = pl_loggers.TensorBoardLogger("어디어디logs/")
-    trainer=pl.Trainer(
-        logger=tb_logger,
-        gpus=,
-        max_epochs=,
-        progress_bar_refresh_rate=,
-        )
-    trainer.fit(MODELNAME, data_module)
-    trainer.test()
-    
-    
+        return prediction
+'''
