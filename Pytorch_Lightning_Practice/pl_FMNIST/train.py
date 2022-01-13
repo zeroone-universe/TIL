@@ -2,6 +2,8 @@ from pytorch_lightning.utilities.types import EPOCH_OUTPUT
 import torch
 from torch import nn
 
+import sys
+
 import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
@@ -13,21 +15,26 @@ import pytorch_lightning as pl
 
 from models.CNN import CNN
 from models.DNN import DNN
-
+from models.RESNET import RESNET
 
 from dataloader import FMNIST_load
 
 class TrainClassifier(pl.LightningModule):
-    def __init__(self, model_name='CNN', drop_prob=0.5):
+    def __init__(self, args):
         super(TrainClassifier,self).__init__()
-        self.drop_prob=drop_prob
-        if model_name=='CNN':
+        self.drop_prob=args.drop_prob
+        
+        if args.model_name=="CNN":
             self.classifier=CNN(drop_prob=self.drop_prob)
-        elif model_name=='DNN':
+        elif args.model_name=='DNN':
             self.classifier=DNN(drop_prob=self.drop_prob)
+        elif args.model_name=="RESNET":
+            self.classifier=RESNET()
         else:
             print("No classifier")
+            sys.exit()
             
+        print(self.classifier)
 
         self.train_acc=torchmetrics.Accuracy()
         self.val_acc=torchmetrics.Accuracy()
@@ -80,8 +87,8 @@ class TrainClassifier(pl.LightningModule):
         
     
 if __name__=='__main__':
-    data_module=FMNIST_load()
-    model=TrainClassifier()
+    data_module=FMNIST_load(args)
+    model=TrainClassifier(args)
     
     tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/",name='CNN_logs')
     trainer=pl.Trainer(gpus=1,

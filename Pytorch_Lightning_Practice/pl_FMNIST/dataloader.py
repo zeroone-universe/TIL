@@ -12,10 +12,10 @@ import torch.nn.functional as F
 
 
 class FMNIST_load(pl.LightningDataModule):
-    def __init__(self,data_dir="F:\TIL_Dataset", batch_size=128):
+    def __init__(self,args):
         super().__init__()
-        self.data_dir=data_dir
-        self.batch_size=batch_size
+        self.data_dir=args.data_dir
+        self.batch_size=args.batch_size
         self.transform = ToTensor()
     
     def prepare_data(self):

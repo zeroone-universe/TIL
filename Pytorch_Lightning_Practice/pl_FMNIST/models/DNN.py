@@ -3,7 +3,7 @@ from torch import nn
 
 class DNN(nn.Module):
     def __init__(self,drop_prob=0.5):
-        super(DNN.self).__init__
+        super(DNN,self).__init__()
 
         self.drop_prob=drop_prob
 
@@ -21,6 +21,7 @@ class DNN(nn.Module):
             
             nn.Linear(32,10)
 			)
+
     def forward(self,x):
         batch_size, _, _, _= x.size()
         x=x.view(batch_size,-1)

@@ -13,14 +13,15 @@ import logging
 
 
 def main(args):
-    
+    print(args.model_name)
     pl.seed_everything(args.seed, workers=True)
     
    
-    data_module=FMNIST_load(data_dir=args.data_dir, batch_size=args.batch_size)
-    train_classifier=TrainClassifier(model_name=args.model_name, drop_prob=args.drop_prob)
+    data_module=FMNIST_load(args)
+    
+    train_classifier=TrainClassifier(args)
 
-    tb_logger=pl_loggers.TensorBoardLogger(args.logger_path, name=args.loggerdir_name)
+    tb_logger=pl_loggers.TensorBoardLogger(args.logger_path, name=f"{args.model_name}_logs")
     trainer=pl.Trainer(gpus=1,
     max_epochs=100,
     progress_bar_refresh_rate=1,
@@ -44,10 +45,9 @@ if __name__=="__main__":
     
     parser.add_argument("--data_dir", default="F:\TIL_Dataset", type=str, help="FMNIST 데이터의 Path")
     parser.add_argument("--batch_size", default=128, type=int, help="배치 사이즈")
-    parser.add_argument("--model_name", default='CNN', type=str, help='모델 이름')
+    parser.add_argument("--model_name", default='RESNET', type=str, help='모델 이름')
     parser.add_argument("--drop_prob", default=0.5, type=int, help='Dropout Probability')
     parser.add_argument("--logger_path", default="F:/TIL/Pytorch_Lightning_Practice/tb_logger/", type=str, help='logger_path')
-    parser.add_argument("--loggerdir_name", default='CNN_logs', type=str, help='loggerdir_name')
     parser.add_argument("--earlystop_patience", default=2, type=int, help='earlystop patience')
     parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
 
