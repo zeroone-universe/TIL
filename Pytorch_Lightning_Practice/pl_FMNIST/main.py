@@ -8,8 +8,15 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 import os
+import logging
+
+
 
 def main(args):
+    
+    pl.seed_everything(args.seed, workers=True)
+    
+   
     data_module=FMNIST_load(data_dir=args.data_dir, batch_size=args.batch_size)
     train_classifier=TrainClassifier(model_name=args.model_name, drop_prob=args.drop_prob)
 
@@ -23,6 +30,7 @@ def main(args):
     )
 
     trainer.fit(train_classifier, data_module)
+ 
     trainer.test(train_classifier, data_module)    
 
 
@@ -41,6 +49,7 @@ if __name__=="__main__":
     parser.add_argument("--logger_path", default="F:/TIL/Pytorch_Lightning_Practice/tb_logger/", type=str, help='logger_path')
     parser.add_argument("--loggerdir_name", default='CNN_logs', type=str, help='loggerdir_name')
     parser.add_argument("--earlystop_patience", default=2, type=int, help='earlystop patience')
+    parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
 
     args=parser.parse_args()
     main(args)
