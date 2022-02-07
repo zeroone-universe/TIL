@@ -28,7 +28,7 @@ class MODELNAME(pl.LightningModule):
     
     '''
     def training_step_end(self, batch_parts)
-        #use when training with dataparallel
+        #use when training with datapara  llel
         #training_step의 return 받는다. 
         $Subbatch 있을때만 쓰면 될 듯? 거의 쓸일 없다 보면 될 것 같다.
         return loss
