@@ -44,13 +44,13 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description="Train FMNIST classifier")
     
     #dataloader args
-    parser.add_argument("--data_dir", default="F:\TIL_Dataset", type=str, help="FMNIST 데이터의 Path")
+    parser.add_argument("--data_dir", default="/media/youngwon/NeoChoi/NeoChoi/TIL_Dataset", type=str, help="FMNIST 데이터의 Path")
     parser.add_argument("--batch_size", default=128, type=int, help="배치 사이즈")
 
     #train arges
     parser.add_argument("--model_name", default='RESNET', type=str, help='모델 이름')
     parser.add_argument("--drop_prob", default=0.5, type=int, help='Dropout Probability')
-    parser.add_argument("--logger_path", default="F:/TIL/Pytorch_Lightning_Practice/tb_logger/", type=str, help='logger_path')
+    parser.add_argument("--logger_path", default="/media/youngwon/NeoChoi/NeoChoi/TIL/DeepLearning/Classifiers/tb_logger", type=str, help='logger_path')
     parser.add_argument("--earlystop_patience", default=2, type=int, help='earlystop patience')
     parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
 

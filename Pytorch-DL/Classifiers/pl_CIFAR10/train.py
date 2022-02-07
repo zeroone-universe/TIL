@@ -90,7 +90,7 @@ if __name__=='__main__':
     data_module=CIFAR10_load(args)
     model=TrainClassifier(args)
     
-    tb_logger = pl_loggers.TensorBoardLogger("F:/TIL/Pytorch_Lightning_Practice/tb_logger/",name='CNN_logs')
+    tb_logger = pl_loggers.TensorBoardLogger("/media/youngwon/NeoChoi/NeoChoi/TIL/DeepLearning/Classifiers/tb_logger",name='CNN_logs')
     trainer=pl.Trainer(gpus=1,
     max_epochs=100,
     progress_bar_refresh_rate=1,
