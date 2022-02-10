@@ -9,8 +9,6 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 import os
 import logging
-'맥 옮긴김에 테스트'
-
 
 def main(args):
     print(args.model_name)

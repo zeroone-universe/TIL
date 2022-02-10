@@ -1,76 +1,59 @@
-import torch
-from torch import nn
+import argparse
+from train import Train_UNet
+from Datamodule import CityscapeDatamodule
 
-import torchmetrics
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from pytorch_lightning import loggers as pl_loggers
-
+from pytorch_lightning import loggers 
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
-    
-class MODELNAME(pl.LightningModule):
-    def __init__(self):
-        super(MODELNAME,self).__init__()
-        
-    def forward(self,x):
-        return output
-        #forward defines the prediciton/inference actions
-    def cal_loss(self, a,b):
-        return loss
-    
-    def configure_optimizers(self):
-        
-        return optimizers
-    
-    def training_step(self,batch,batch_idx):
-        
-        return loss
-    
-    '''
-    def training_step_end(self, batch_parts)
-        #use when training with datapara  llel
-        #training_step의 return 받는다. 
-        $Subbatch 있을때만 쓰면 될 듯? 거의 쓸일 없다 보면 될 것 같다.
-        return loss
-    '''
+import os
+import logging
+
+def main(args):
+    pl.seed_everything(args.seed, workers=True)
     
    
-    def training_epoch_end(self, training_step_outputs)
-        #training_step 혹은 training_step_end의 아웃풋들을 리스트로 받는다.
+    data_module=CityscapeDatamodule(args)
+    
+    train_UNet=Train_UNet(args)
+
+    tb_logger=loggers.TensorBoardLogger(args.logger_path, name=f"UNet_logs")
+    trainer=pl.Trainer(gpus=1,
+    max_epochs=10,
+    progress_bar_refresh_rate=1,
+    #callbacks=[EarlyStopping(monitor="val_acc", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="max")],
+    logger=tb_logger,
+    default_root_dir="./"
+    )
+
+    trainer.fit(train_UNet, data_module)
+ 
+    #trainer.test(train_classifier, data_module)    
+
+
+
     
 
-    def validation_step(self,batch,batch_idx):
-        return val_loss
+
+
+if __name__=="__main__":
+    parser=argparse.ArgumentParser(description="Train FMNIST classifier")
+    #setting args
+    parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
+
+
+    #dataloader args
+    parser.add_argument("--data_dir", default="/media/youngwon/Neo/NeoChoi/TIL_Dataset/cityscapes_data", type=str, help="FMNIST 데이터의 Path")
+    parser.add_argument("--batch_size", default=8, type=int, help="배치 사이즈")
+
+    #model&train args
+    parser.add_argument("--lr", default=0.01, type=float, help='logger_path')
+    parser.add_argument("--num_classes", default=10, type=int, help='logger_path')
+    parser.add_argument("--logger_path", default="/media/youngwon/Neo/NeoChoi/TIL/Pytorch-DL/U-Net/tb_logger", type=str, help='logger_path')
 
     '''
-    def validation_step_end(self, batch_parts):
-        return something 
+    parser.add_argument("--earlystop_patience", default=2, type=int, help='earlystop patience')
+    parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
     '''
-
-    def validation_epoch_end(self,validation_step_outputs):
-        return 
-
-    def test_step(self,batch,batch_idx):
-        #will not be used until I call trainer.test()    
-        return test_loss
-    
-    def test_epoch_end(self, test_step_outputs):
-        return something
-
-    def predict_step(self, batch, batch_idx, dataloader_idx=0):
-        return a
-
-if __name__=='__main__':
-    data_module=DATASETNAME()
-    
-    tb_logger = pl_loggers.TensorBoardLogger("어디어디logs/")
-    trainer=pl.Trainer(
-        logger=tb_logger,
-        gpus=,
-        max_epochs=,
-        progress_bar_refresh_rate=,
-        )
-    trainer.fit(MODELNAME, data_module)
-    trainer.test()
-    
-    
+    args=parser.parse_args()
+    main(args)

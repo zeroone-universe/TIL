@@ -15,16 +15,18 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
+
+color_array = np.random.choice(range(256), 3*1000).reshape(-1, 3)
+label_model = KMeans(n_clusters = 10)
+label_model.fit(color_array)
+
+
 class CityscapeDataset(Dataset):
-    def __init__(self, image_dir):
+    def __init__(self, image_dir, label_model):
         self.image_dir=image_dir
 
-        color_array = np.random.choice(range(256), 3*1000).reshape(-1, 3)
-        
-        self.label_model = KMeans(n_clusters = 10)
-
-        self.label_model.fit(color_array)
         self.paths_jpg=self.get_paths_jpg(self.image_dir)
+        self.label_model=label_model
 
     def __len__(self) :
         return len(self.paths_jpg)
@@ -68,10 +70,12 @@ class CityscapeDataset(Dataset):
 
 
 class CityscapeDatamodule(pl.LightningDataModule):
-    def __init__(self, data_dir, batch_size):
+    def __init__(self, args):
         super().__init__()
         self.data_dir= args.data_dir
         self.batch_size= args.batch_size
+
+
         self.dataset_train=CityscapeDataset(image_dir=f"{self.data_dir}/train")
         self.dataset_val=CityscapeDataset(image_dir=f"{self.data_dir}/val")
 
@@ -79,13 +83,13 @@ class CityscapeDatamodule(pl.LightningDataModule):
         pass
     
     def train_dataloader(self):
-        return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, num_workers=0)
     
     def val_dataloader(self):
-        return DataLoader(self.dataset_val, batch_size=self.batch_size)
+        return DataLoader(self.dataset_val, batch_size=self.batch_size, num_workers=0)
     
     def test_dataloader(self):
-        return DataLoader(self.dataset_val, batch_size=self.batch_size)
+        return DataLoader(self.dataset_val, batch_size=self.batch_size, num_workers=0)
 '''
     def predict_dataloader(self):
         optional
