@@ -16,9 +16,6 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 
-color_array = np.random.choice(range(256), 3*1000).reshape(-1, 3)
-label_model = KMeans(n_clusters = 10)
-label_model.fit(color_array)
 
 
 class CityscapeDataset(Dataset):
@@ -66,21 +63,30 @@ class CityscapeDataset(Dataset):
       	    		transforms.ToTensor(),
                     transforms.Normalize(mean = (0.485, 0.56, 0.406), std = (0.229, 0.224, 0.225))
         ])
-        return transform_ops(image)   
+        return transform_ops(image)
+        
 
 
+
+'''
 class CityscapeDatamodule(pl.LightningDataModule):
     def __init__(self, args):
         super().__init__()
         self.data_dir= args.data_dir
         self.batch_size= args.batch_size
 
+        self.num_classes=args.num_classes
 
-        self.dataset_train=CityscapeDataset(image_dir=f"{self.data_dir}/train")
-        self.dataset_val=CityscapeDataset(image_dir=f"{self.data_dir}/val")
+
+
+    def prepare_data(self):
+        color_array = np.random.choice(range(256), 3*1000).reshape(-1, 3)
+        self.label_model = KMeans(n_clusters = self.num_classes)
+        self.label_model.fit(color_array)
 
     def setup(self, stage=None):
-        pass
+        self.dataset_train=CityscapeDataset(image_dir=f"{self.data_dir}/train", label_model=self.label_model)
+        self.dataset_val=CityscapeDataset(image_dir=f"{self.data_dir}/val", label_model=self.label_model)
     
     def train_dataloader(self):
         return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, num_workers=0)
@@ -91,14 +97,4 @@ class CityscapeDatamodule(pl.LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.dataset_val, batch_size=self.batch_size, num_workers=0)
 '''
-    def predict_dataloader(self):
-        optional
-'''
 
-if __name__=="__main__":
-    
-    test=CityscapeDatamodule(data_dir= "/media/youngwon/Neo/NeoChoi/TIL_Dataset/cityscapes_data",batch_size = 12)
-    a=test.train_dataloader()
-    img, label= next(iter(a))
-    print(f"Example_Data \nDim : {img.dim()}, Shape: {img.shape}, dtype: {img.dtype}, device: {img.device} ")
-    print(f"Example_target \nDim : {label.dim()}, Shape: {label.shape}, dtype: {label.dtype}, device: {label.device} ")

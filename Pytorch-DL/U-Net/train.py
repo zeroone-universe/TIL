@@ -22,9 +22,9 @@ class Train_UNet(pl.LightningModule):
         super(Train_UNet,self).__init__()
         self.model=UNet(num_classes=args.num_classes)
         self.lr=args.lr
+        
 
-
-        print(self.model)
+        self.log("Model", self.model)
 
     def forward(self,x):
         output=self.model(x)
