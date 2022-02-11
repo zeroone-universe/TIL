@@ -31,7 +31,7 @@ def main(args):
 
     tb_logger=loggers.TensorBoardLogger(args.logger_path, name=f"UNet_logs")
     trainer=pl.Trainer(gpus=1,
-    max_epochs=100,
+    max_epochs=args.max_epochs,
     progress_bar_refresh_rate=1,
     callbacks=[EarlyStopping(monitor="validation_loss", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="min")],
     logger=tb_logger,
@@ -40,7 +40,7 @@ def main(args):
 
     trainer.fit(train_UNet, train_dataloaders=train_dataloader, val_dataloaders=validation_dataloader)
  
-    #trainer.test(train_classifier, data_module)    
+    trainer.predict(dataloaders=validation_dataloader) 
 
 
 
@@ -64,6 +64,7 @@ if __name__=="__main__":
 
     #training args
     parser.add_argument("--logger_path", default="/media/youngwon/Neo/NeoChoi/TIL/Pytorch-DL/U-Net/tb_logger", type=str, help='logger_path')
+    parser.add_argument("--max_epochs", default=100, type=int, help='max_epochs')
     parser.add_argument("--earlystop_patience", default=2, type=int, help='earlystop patience')
     
     
