@@ -59,7 +59,7 @@ class CEDataset(Dataset):
             wav_orig = wav_orig.repeat(1, t_end // sig_len + 1) [ ..., t_start : t_end]
             wav_dist = wav_dist.repeat(1, t_end// sig_len + 1) [ ..., t_start : t_end]
 
-        return wav_orig, wav_dist #, filename
+        return wav_orig, wav_dist, filename
 
 
 
