@@ -1,7 +1,7 @@
 import os
 
 def get_wav_paths(paths: list):
-    wav_paths=[]
+    wav_paths=[]w
     if type(paths)==str:
         paths=[paths]
         
