@@ -9,7 +9,7 @@ import numpy as np
 
 class AECNN(nn.Module):
     def __init__(self, in_channels=1, out_channels = 1, num_layers = 8, kernel_size=11):
-        super().__init__()
+        super(AECNN, self).__init__()
 
         self.name= "AECNN"
         self.in_channels=in_channels

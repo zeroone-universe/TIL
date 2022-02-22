@@ -49,7 +49,7 @@ def main(args):
 
 
 if __name__=="__main__":
-    parser=argparse.ArgumentParser(description="Train FMNIST classifier")
+    parser=argparse.ArgumentParser(description="Train UNet")
     #setting args
     parser.add_argument("--seed", default=0b011011, type=int, help='random seed')
 

@@ -9,7 +9,7 @@ from utils import *
 
 class CEDataset(Dataset): 
   #데이터셋의 전처리를 해주는 부분
-    def __init__(self, path_dir_orig, path_dir_dist, seg_len=2):
+    def __init__(self, path_dir_dist, path_dir_orig, seg_len=2):
         self.path_dir_orig   = path_dir_orig  
         self.path_dir_dist   = path_dir_dist  
         self.seg_len = seg_len
@@ -59,7 +59,7 @@ class CEDataset(Dataset):
             wav_orig = wav_orig.repeat(1, t_end // sig_len + 1) [ ..., t_start : t_end]
             wav_dist = wav_dist.repeat(1, t_end// sig_len + 1) [ ..., t_start : t_end]
 
-        return wav_orig, wav_dist, filename
+        return wav_dist, wav_orig #, filename
 
 
 
