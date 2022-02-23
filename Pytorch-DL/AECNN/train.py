@@ -12,9 +12,11 @@ from Loss import *
 
 class TrainAECNN(pl.LightningModule):
     def __init__(self, args):
-        super(TrainAECNN, self).__init
+        super(TrainAECNN, self).__init__()
         self.model = AECNN()
         self.lr = args.lr
+
+        self.loss_type =  args.loss_type
         
     def forward(self,x):
         output= self.model(x)
@@ -22,7 +24,7 @@ class TrainAECNN(pl.LightningModule):
         return output
 
     def loss_fn(self, s_noisy, s_orig):
-        if args.loss_type == "SISNR":
+        if self.loss_type == "SISNR":
             loss_function = SISNRLoss()
         
         return loss_function(s_noisy, s_orig)

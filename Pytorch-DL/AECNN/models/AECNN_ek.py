@@ -32,15 +32,8 @@ class AECNN(nn.Module):
         
         x, down = self.Encoder(x)
         
-        print('2222',x.shape)
-        print(len(down))
         
 
-        x1 = self.Decoder(x, down)
-        print('333',x1.shape)
-        
-        x2 = x1[:, :, :x_len] # == [..., :x_len]
-        print('444',x2.shape)
         
         x = self.Decoder(x, down)[..., :x_len]
         
@@ -143,7 +136,7 @@ class AECNN_coupling(nn.Module):
     def forward(self, x, down):
         for b in range(self.B):
             down[b] = self.down_layers[b](down[b])
-            print(down[b].shape)
+            
             
         x = self.bn_layer(x)
 
@@ -186,7 +179,7 @@ class UNet_down(nn.Module):
         if self.dropout:
             x = self.do(x)
                 
-        print(x.shape)
+        
         return x
         
 class UNet_up(nn.Module):
@@ -257,6 +250,7 @@ class Identity(nn.Module):
         
     def forward(self, x):
         return x
+
 def count_params(model):
  return sum([param.numel() if param.requires_grad==True else 0 for param in model.parameters()])
  
@@ -268,12 +262,11 @@ if __name__ == '__main__':
     
     
     
-    print(model.Encoder)
-    print(non_linear)
+    
     model.train()
     x = th.randn(4, 1, 2048).cuda()
     y = th.randn(4, 1, 32000).cuda()
-    z = model(x)
+    z = model(y)
 
     # #print(count_params(model))
     del model
