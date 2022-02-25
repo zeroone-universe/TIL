@@ -85,10 +85,10 @@ class CEDataModule(pl.LightningDataModule):
         return DataLoader(self.train_dataset, batch_size = self.batch_size, shuffle = True)
     
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size = self.batch_size)
+        return DataLoader(self.val_dataset, batch_size = 1)
 
     def test_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size = self.batch_size)
+        return DataLoader(self.val_dataset, batch_size = 1)
     
 
 if __name__=="__main__":
