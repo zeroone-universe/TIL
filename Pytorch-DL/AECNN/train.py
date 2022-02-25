@@ -7,7 +7,7 @@ import sys
 import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
-from models.AECNN_ek import AECNN
+from models.AECNN_01 import AECNN
 from Loss import *
 
 class TrainAECNN(pl.LightningModule):

@@ -18,9 +18,9 @@ def main(args):
     tb_logger = pl_loggers.TensorBoardLogger(args.logger_path, name=f"AECNN_logs")
 
     trainer=pl.Trainer(gpus=1,
-    max_epochs=10,
+    max_epochs=args.max_epochs,
     progress_bar_refresh_rate=1,
-    callbacks=[EarlyStopping(monitor="val_loss", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="max")],
+    callbacks=[EarlyStopping(monitor="val_loss", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="min")],
     logger=tb_logger,
     default_root_dir="./"
     )
@@ -46,12 +46,12 @@ if __name__ == "__main__":
     parser.add_argument("--seg_len", default = 2,  type = int, help = "seg_len")
 
     #model args
-    parser.add_argument("--lr", default = 1)
+    parser.add_argument("--lr", default = 0.0001)
 
     #training_args
     parser.add_argument("--logger_path", default = "/media/youngwon/Neo/NeoChoi/TIL/Pytorch-DL/AECNN/tb_logger", type = str, help = "logger_path")
-    parser.add_argument("--max_epochs", default = 10, type = int, help = "max_epochs")
-    parser.add_argument("--earlystop_patience", default = 2, type = int, help = "earlystop patience")
+    parser.add_argument("--max_epochs", default = 100, type = int, help = "max_epochs")
+    parser.add_argument("--earlystop_patience", default = 3, type = int, help = "earlystop patience")
     parser.add_argument("--loss_type", default = "SISNR", type = str, help = "loss type")
 
     args = parser.parse_args()

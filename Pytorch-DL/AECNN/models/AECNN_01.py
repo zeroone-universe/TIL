@@ -9,7 +9,7 @@ import numpy as np
 
 class AECNN(nn.Module):
     def __init__(self, in_channels=1, out_channels = 1, num_layers = 8, kernel_size=11):
-        super(AECNN, self).__init__()
+        super().__init__()
 
         self.name= "AECNN"
         self.in_channels=in_channels
@@ -28,11 +28,12 @@ class AECNN(nn.Module):
 
         x_len= x.shape[-1]
 
-        x_enc, down = self.Encoder(x)
+        x, down = self.Encoder(x)
 
-        x_dec = self.Decoder(x_enc, down)[..., :x_len]
+        x_enh = self.Decoder(x, down)[..., :x_len]
 
-        return x_dec
+        #print(x_enh.shape)
+        return x_enh
 
     def get_name(self):
         return self.name
@@ -46,12 +47,12 @@ class AECNN_Encoder(nn.Module):
         self.down_channels = [2**(6+idx//3) for idx in range(num_layers)]
 
         self.unet_down = nn.ModuleList([UNet_down(
-            in_channels= self.down_channels[idx-1] if idx>0 else in_channels,
-            out_channels=self.down_channels[idx],
-            kernel_size=kernel_size,
-            stride=2 if idx>0 else 1,
-            dropout=0.2 if idx%3 ==2 else 0,
-            bias=True,
+            in_channels = self.down_channels[idx-1] if idx>0 else in_channels,
+            out_channels =self.down_channels[idx],
+            kernel_size = kernel_size,
+            stride = 2 if idx > 0 else 1,
+            dropout = 0.2 if idx%3 == 2 else 0,
+            bias=True
         ) for idx in range(self.num_layers)])
 
         self.unet_bottle = UNet_down(
@@ -60,7 +61,7 @@ class AECNN_Encoder(nn.Module):
             kernel_size= kernel_size,
             bias=True,
             stride=2,
-            dropout=0.2 if num_layers%3==2 else 0,
+            dropout=0.2 if num_layers % 3 == 2 else 0,
         )
 
     def forward(self,x):
@@ -82,19 +83,19 @@ class AECNN_Decoder(nn.Module):
     def __init__(self, out_channels=1, num_layers= 8 , kernel_size = 11):
         super().__init__()
 
-        self.out_channels= out_channels
+        self.out_channels = out_channels
         self.num_layers = num_layers
         down_channels = [2**(6+idx//3) for idx in range(self.num_layers)]
         up_channels = list(reversed(down_channels))
 
         self.unet_up = nn.ModuleList([UNet_up(
-            in_channels = down_channels[-idx] + up_channels[idx-1] if idx>0 else down_channels [-1],
-            out_channels = up_channels[idx]*2,
+            in_channels = down_channels[-idx] + up_channels[idx-1] if idx>0 else down_channels[-1],
+            out_channels = up_channels[idx],
             kernel_size = kernel_size,
-            stride = 1, activation = "prelu",
+            stride = 2, 
+            activation = "prelu",
             dropout = 0.2 if idx%3 == 2 else 0,
-            bias = True,
-            r=2
+            bias = True
         ) for idx in range(self.num_layers)])
 
         self.unet_final = UNet_up(
@@ -104,8 +105,7 @@ class AECNN_Decoder(nn.Module):
             stride = 1,
             activation = None,
             dropout = 0,
-            bias = True,
-            r=1
+            bias = True
         )
 
     def forward(self, x, down):
@@ -137,29 +137,28 @@ class UNet_down(nn.Module):
         if dropout>0:
             self.do = nn.Dropout(dropout)
         
-        # self.BN = nn.BatchNorm1d(out_channels)
         
     def forward(self, x):
         l = x.shape[-1]
         x = F.pad(x, pad=(0, self.kernel_size))
         x = self.conv(x)
         
-        x = x[..., :l//self.stride]
-        #x = x[..., :l//self.stride+1]
+        
+        x = x[..., :l//self.stride+1]
         
         x = self.activation(x)
 
         if self.dropout:
             x = self.do(x)
-                
-        print(x.shape)
+               
+        
         return x
 
 class UNet_up(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride = 1, activation = "leaky_relu", dropout = 0, bias = True, r = 2):
+    def __init__(self, in_channels, out_channels, kernel_size, stride = 2, activation = "leaky_relu", dropout = 0, bias = True, r = 2):
         super().__init__()
 
-        self.conv = nn.Conv1d(
+        self.conv = nn.ConvTranspose1d(
             in_channels = in_channels,
             out_channels = out_channels,
             kernel_size = kernel_size,
@@ -167,7 +166,7 @@ class UNet_up(nn.Module):
             padding = kernel_size//2,
             bias = bias
         )
-        nn.init.orthogonal_(self.conv.weight)
+        
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -180,7 +179,6 @@ class UNet_up(nn.Module):
             self.dropout = nn.Dropout(dropout)
 
         self.activation = nn.LeakyReLU() if activation != None else activation
-        #self.DimShuffle = PixelShuffle1D(r)
 
     def forward(self, x, x_prev):
         x = self.conv(x)
@@ -190,12 +188,10 @@ class UNet_up(nn.Module):
         if self.dropout:
             x = self.dropout(x)
 
-        #x = self.DimShuffle(x)
-
         if x_prev is not None:
-            x= torch.cat([x[...,:x_prev.shape[-1]], x_prev], dim = 1)
-
-        print(x.shape)
+            x = torch.cat([x[..., :x_prev.shape[-1]], x_prev], dim=1)
+        
+        
 
         return x
 
@@ -210,5 +206,7 @@ if __name__ == '__main__':
     y = torch.randn(4, 1, 2048).cuda()
     z = model(y)
 
-    #print(count_params(model))
+    print(z)
+    
     del model
+    

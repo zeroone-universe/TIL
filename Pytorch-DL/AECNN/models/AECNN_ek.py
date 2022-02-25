@@ -33,13 +33,11 @@ class AECNN(nn.Module):
         x, down = self.Encoder(x)
         
         
-
-        
         x = self.Decoder(x, down)[..., :x_len]
         
         
         
-        
+        print(x.shape)
 
         return x
 
@@ -79,9 +77,9 @@ class AECNN_Encoder(nn.Module):
         for b in range(self.B):
             x = self.unet_down[b](x)
             down.append(x)
-            print(x.shape)
+            
         x = self.unet_bottle(x)
-        print(x, len(down))
+        
         return x, down
     
 class AECNN_Decoder(nn.Module):
@@ -179,7 +177,7 @@ class UNet_down(nn.Module):
         if self.dropout:
             x = self.do(x)
                 
-        
+        print(x.shape)
         return x
         
 class UNet_up(nn.Module):
@@ -219,6 +217,8 @@ class UNet_up(nn.Module):
 
         if x_prev is not None:
             x = th.cat([x[..., :x_prev.shape[-1]], x_prev], dim=1)
+
+        print(x.shape)
         return x
         
 class PixelShuffle1D(nn.Module):

@@ -96,4 +96,6 @@ if __name__=="__main__":
     datamodule.setup()
     traindm=datamodule.train_dataloader()
     valdm=datamodule.val_dataloader()
-    print(next(iter(traindm)))
+    a,b=next(iter(traindm))
+    print(a.shape)
+    print(a)
