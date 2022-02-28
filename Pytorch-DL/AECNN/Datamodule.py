@@ -78,7 +78,7 @@ class CEDataModule(pl.LightningDataModule):
         pass
     
     def setup(self, stage=None):
-        full_dataset = CEDataset(path_dir_orig = f"{self.data_dir}/target", path_dir_dist = f"{self.data_dir}/decoded", seg_len = self.seg_len)
+        full_dataset = CEDataset(path_dir_orig = f"{self.data_dir}/original", path_dir_dist = f"{self.data_dir}/decoded", seg_len = self.seg_len)
         self.train_dataset, self.val_dataset = torch.utils.data.random_split(full_dataset, [4000, len(full_dataset) - 4000])
     
     def train_dataloader(self):
