@@ -20,7 +20,7 @@ def main(args):
     trainer=pl.Trainer(gpus=1,
     max_epochs=args.max_epochs,
     progress_bar_refresh_rate=1,
-    callbacks=[EarlyStopping(monitor="val_loss", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="min")],
+    callbacks=[EarlyStopping(monitor="val_pesq", min_delta=0.00, patience=args.earlystop_patience, verbose=False, mode="max")],
     logger=tb_logger,
     default_root_dir="./"
     )
