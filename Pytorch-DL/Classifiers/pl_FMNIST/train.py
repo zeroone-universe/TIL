@@ -46,7 +46,9 @@ class TrainClassifier(pl.LightningModule):
     
     def loss_fn(self, logits, labels):
         cross_entropy_loss=nn.CrossEntropyLoss()
-        return cross_entropy_loss(logits,labels)
+        loss = cross_entropy_loss(logits, labels)
+        print(loss.shape)
+        return loss
     
     def configure_optimizers(self):
         return torch.optim.Adam(self.classifier.parameters(),lr=1e-3)

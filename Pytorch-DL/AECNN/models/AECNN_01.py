@@ -206,7 +206,7 @@ if __name__ == '__main__':
     y = torch.randn(4, 1, 2048).cuda()
     z = model(y)
 
-    print(z)
+    print(z.shape)
     
     del model
     
