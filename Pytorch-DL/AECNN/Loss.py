@@ -37,11 +37,11 @@ class SISNRLoss:
 
 if __name__ == "__main__":
     sisnr_loss = SISNRLoss()
-    orig = torch.randn(4, 1, 2048).cuda()
-    noise = torch.randn(4, 1, 2048).cuda()
+    orig = torch.randn(100, 1, 512).cuda()
+    noise = torch.randn(100, 1, 512).cuda()
 
     x_dot = torch.sum(orig*noise)
-    '''
+
     a = sisnr_loss(orig + noise , orig)
     print(a)
-    '''
+    

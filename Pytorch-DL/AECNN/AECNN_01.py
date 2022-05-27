@@ -7,8 +7,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+from config import *
+
 class AECNN(nn.Module):
-    def __init__(self, in_channels=1, out_channels = 1, num_layers = 8, kernel_size=11):
+    def __init__(self, in_channels=1, out_channels = 1, num_layers = NUM_LAYERS, kernel_size=KERNEL_SIZE):
         super().__init__()
 
         self.name= "AECNN"
@@ -203,7 +205,7 @@ if __name__ == '__main__':
     
     
 
-    y = torch.randn(4, 1, 2048).cuda()
+    y = torch.randn(4, 1, 512).cuda()
     z = model(y)
 
     print(z.shape)
