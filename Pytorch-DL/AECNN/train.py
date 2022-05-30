@@ -11,8 +11,8 @@ import torchmetrics
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 import os
 
-from models.AECNN_01 import AECNN
-from Loss import *
+from AECNN import AECNN
+from loss import *
 from config import *
 
 from pesq import pesq

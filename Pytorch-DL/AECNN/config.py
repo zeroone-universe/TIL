@@ -19,9 +19,9 @@ MAX_EPOCHS= 30
 #1. Dataset
 #-----------------------------------------------
 #directory that have every dataset in it.
-DATA_DIR = "/media/youngwon/Neo/Neochoi/Research/NeuralCodec"
+DATA_DIR = "/media/youngwon/Neo/NeoChoi/TIL/TIL_Dataset/AECNN_enhancement"
 
-INPUT_DIR = "TIMIT"
+INPUT_DIR = "TIMIT_decoded"
 TARGET_DIR = "TIMIT"
 
 BATCH_SIZE = 4
