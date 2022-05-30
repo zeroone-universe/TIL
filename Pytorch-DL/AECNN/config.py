@@ -31,8 +31,8 @@ SEG_LEN = 2
 #-----------------------------------------------
 #2. Model
 #-----------------------------------------------
-WINDOW_SIZE = 512
-HOP_SIZE = 256
+WINDOW_SIZE = 2048
+HOP_SIZE = 512
 
 NUM_LAYERS = 8
 KERNEL_SIZE = 11
@@ -40,6 +40,11 @@ KERNEL_SIZE = 11
 #-----------------------------------------------
 #3. Loss
 #-----------------------------------------------
+LOSS_TYPE = "STFTLoss"
+#LOSS_TYPE = "SISNRLoss"
+#for STFT Loss
+STFTLOSS_WINDOW_SIZE = 512
+STFTLOSS_HOP_SIZE = 256
 
 #-----------------------------------------------
 #4. Optimizer

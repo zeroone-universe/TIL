@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
 
     #training_args
-    parser.add_argument("--loss_type", default = "SISNR", type = str, help = "loss type")
+    parser.add_argument("--loss_type", default = "STFT", type = str, help = "loss type")
 
     args = parser.parse_args()
     main(args)

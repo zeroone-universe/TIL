@@ -22,7 +22,6 @@ class TrainAECNN(pl.LightningModule):
         super(TrainAECNN, self).__init__()
         self.model = AECNN()
         self.lr = INITIAL_LR
-
         self.model = AECNN(in_channels=1, out_channels = 1, num_layers = NUM_LAYERS, kernel_size=KERNEL_SIZE)
         self.loss_type =  args.loss_type
         
@@ -50,8 +49,10 @@ class TrainAECNN(pl.LightningModule):
         return x_seg, output_seg, wav_rec
 
     def loss_fn(self, s_noisy, s_orig):
-        if self.loss_type == "SISNR":
-            loss_function = SISNRLoss()
+        # if self.loss_type == "SISNR":
+        #     loss_function = SISNRLoss()
+        
+        loss_function = STFTLoss()
         
         return loss_function(s_noisy, s_orig)
 
@@ -62,16 +63,34 @@ class TrainAECNN(pl.LightningModule):
         
     def training_step(self, batch, batch_idx):
         wav_dist, wav_target, _ = batch
-        target_seg, output_seg, wav_enh = self.forward(wav_dist)
-        loss = self.loss_fn(wav_enh, wav_target)
+        x_seg, output_seg, wav_enh = self.forward(wav_dist)
+        
+
+        #wav_target을 segmentation
+        wav_target = F.pad(wav_target, (0,WINDOW_SIZE), "constant", 0)
+        wav_target_seg =wav_target.unfold(-1, WINDOW_SIZE, HOP_SIZE)
+        B, C, T, L = wav_target_seg.shape
+        wav_target_seg = wav_target_seg.transpose(1,2).contiguous()
+        wav_target_seg = wav_target_seg.view(B*T, C, L)
+
+        loss = self.loss_fn(output_seg, wav_target_seg)
+        # loss = self.loss_fn(wav_enh, wav_target)
         self.log("training_loss" , loss)
         return loss 
 
     def validation_step(self, batch, batch_idx):
         wav_dist, wav_target, filename = batch
+
         target_seg, output_seg, wav_enh  = self.forward(wav_dist)
         
-        val_loss = self.loss_fn(wav_enh, wav_target)
+         #wav_target을 segmentation
+        wav_target = F.pad(wav_target, (0,WINDOW_SIZE), "constant", 0)
+        wav_target_seg =wav_target.unfold(-1, WINDOW_SIZE, HOP_SIZE)
+        B, C, T, L = wav_target_seg.shape
+        wav_target_seg = wav_target_seg.transpose(1,2).contiguous()
+        wav_target_seg = wav_target_seg.view(B*T, C, L)
+
+        val_loss = self.loss_fn(output_seg, wav_target_seg)
         
         if self.current_epoch >= EPOCHS_SAVE_START:
             wav_enh_cpu = wav_enh.squeeze(0).cpu()
