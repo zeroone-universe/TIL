@@ -22,14 +22,13 @@ def main(args):
     trainer=pl.Trainer(gpus=1,
     max_epochs=MAX_EPOCHS,
     progress_bar_refresh_rate=1,
-    
     logger=tb_logger,
     default_root_dir="/media/youngwon/Neo/NeoChoi/TIL/Pytorch-DL/AECNN/model_checkpoint"
     )
 
     trainer.fit(train_aecnn, ce_datamodule)
 
-
+ 
 
 
 

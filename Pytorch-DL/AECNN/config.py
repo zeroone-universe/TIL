@@ -13,7 +13,7 @@ EPOCHS_SAVE_START = 0
 OUTPUT_DIR_PATH = "/media/youngwon/Neo/NeoChoi/TIL/TIL_Dataset/AECNN_enhancement/TIMIT_enhanced"
 LOGGER_PATH = "/media/youngwon/Neo/NeoChoi/TIL/Pytorch-DL/AECNN/tb_logger"
 
-MAX_EPOCHS= 30
+MAX_EPOCHS= 50
 
 #-----------------------------------------------
 #1. Dataset
@@ -24,7 +24,7 @@ DATA_DIR = "/media/youngwon/Neo/NeoChoi/TIL/TIL_Dataset/AECNN_enhancement"
 INPUT_DIR = "TIMIT_decoded"
 TARGET_DIR = "TIMIT"
 
-BATCH_SIZE = 4
+BATCH_SIZE = 8
 SEG_LEN = 2
 
 
