@@ -2,3 +2,5 @@ lightning_logs
 tb_logger
 TIL_Dataset
 *.pyc
+logger
+*.pt

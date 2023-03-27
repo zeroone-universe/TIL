@@ -43,7 +43,7 @@ def main(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description="Train FMNIST classifier")
     
-    parser.add_argument("--data_dir", default="/media/youngwon/Neo/NeoChoi/TIL_Dataset", type=str, help="FMNIST 데이터의 Path")
+    parser.add_argument("--data_dir", default="/media/youngwon/Neo/NeoChoi/Dataset", type=str, help="FMNIST 데이터의 Path")
     parser.add_argument("--batch_size", default=128, type=int, help="배치 사이즈")
     parser.add_argument("--model_name", default='RESNET', type=str, help='모델 이름')
     parser.add_argument("--drop_prob", default=0.5, type=int, help='Dropout Probability')
