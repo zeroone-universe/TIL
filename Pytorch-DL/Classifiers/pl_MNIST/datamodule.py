@@ -13,8 +13,11 @@ class MNIST_datamodule(pl.LightningDataModule):
         self.data_dir = config["datamodule"]["data_dir"]
         self.batch_size = config["datamodule"]["batch_size"]
         self.transform = transforms.ToTensor()
+        
+        #???
         self.prepare_data_per_node = True
         self.save_hyperparameters()
+        self.allow_zero_length_dataloader_with_multiple_devices = False
         
     def prepare_data(self):
         # download

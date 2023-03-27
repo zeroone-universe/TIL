@@ -6,8 +6,8 @@ datamodule:
   batch_size: 32
 
 model:
-  # model_name : "DNN"
-  model_name: "CNN"
+  model_name : "DNN"
+  # model_name: "CNN"
   drop_prob : 0.5
 
 train:

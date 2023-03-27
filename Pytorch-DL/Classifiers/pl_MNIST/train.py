@@ -31,9 +31,9 @@ class MNIST_train(pl.LightningModule):
             
         print(self.classifier)
         
-        self.train_acc=torchmetrics.Accuracy()
-        self.val_acc=torchmetrics.Accuracy()
-        self.test_acc=torchmetrics.Accuracy()
+        self.train_acc=torchmetrics.classification.MulticlassAccuracy(num_classes = 10)
+        self.val_acc=torchmetrics.classification.MulticlassAccuracy(num_classes = 10)
+        self.test_acc=torchmetrics.classification.MulticlassAccuracy(num_classes = 10)
         
     def forward(self,x):
         output = self.classifier(x)
@@ -52,7 +52,7 @@ class MNIST_train(pl.LightningModule):
         loss = self.criterion(y_hat, y)
         acc = self.train_acc(y_hat, y)
         metrics= {'train_acc':acc, 'train_loss':loss}
-        self.log_dict(metrics)
+        self.log_dict(metrics, prog_bar = True)
         return loss
         
     def validation_step(self,batch,batch_idx):
@@ -60,8 +60,8 @@ class MNIST_train(pl.LightningModule):
         y_hat=self.forward(x)
         loss=self.criterion(y_hat,y)
         acc=self.val_acc(y_hat,y)
-        self.log('val_acc', acc)
-        self.log('val_loss', loss)
+        self.log('val_acc', acc, prog_bar = True)
+        self.log('val_loss', loss, prog_bar = True)
         return loss
     
     def test_step(self,batch,batch_idx):
@@ -72,6 +72,7 @@ class MNIST_train(pl.LightningModule):
         acc=self.test_acc(y_hat,y)
         metrics={'test_acc':acc, 'test_loss':loss}
         self.log_dict(metrics)
+        print(f"Test Accuracy: {acc}, Test Loss: {loss}")
 
     def predict_step(self, batch, batch_idx):
         pass
