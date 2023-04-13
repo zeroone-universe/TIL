@@ -5,3 +5,4 @@ TIL_Dataset
 logger
 *.pt
 ._.*
+*_content
